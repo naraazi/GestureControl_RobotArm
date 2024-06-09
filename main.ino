@@ -1,11 +1,11 @@
 #include <Servo.h>
 
 Servo servo[4];
-int default_angle[4] = {75, 90, 90, 60};
+int default_angle[4] = {0, 78, 113, 150};
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(115200); 
     servo[0].attach(5);
     servo[1].attach(6);
     servo[2].attach(7);

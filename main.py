@@ -5,34 +5,37 @@ import mediapipe as mp
 # config
 write_video = False
 debug = False
-cam_source = 0 # 0,1 for usb cam, "http://192.168.1.165:4747/video" for webcam
+cam_source = "/dev/video2" # 0,1 for usb cam, "http://192.168.1.165:4747/video" for webcam
 
 if not debug:
-    ser = serial.Serial('/dev/ttyUSB0', 115200)
+    ser = serial.Serial('/dev/ttyUSB1', 115200)
 
 x_min = 0
-x_mid = 75
-x_max = 150
+x_mid = 90
+x_max = 180
 # use angle between wrist and index finger to control x axis
 palm_angle_min = -50
 palm_angle_mid = 20
 
-y_min = 0
-y_mid = 90
-y_max = 180
+y_min = 5
+y_mid = 78
+y_max = 150
 # use wrist y to control y axis
 wrist_y_min = 0.3
 wrist_y_max = 0.9
 
-z_min = 10
-z_mid = 90
+# -- NO Z
+z_min = 45
+z_mid = 133
 z_max = 180
 # use palm size to control z axis
 plam_size_min = 0.1
 plam_size_max = 0.3
 
-claw_open_angle = 60
-claw_close_angle = 0
+# claw_open_angle = 60
+# claw_close_angle = 0
+claw_open_angle = 150
+claw_close_angle = 40
 
 servo_angle = [x_mid,y_mid,z_mid,claw_open_angle] # [x, y, z, claw]
 prev_servo_angle = servo_angle
