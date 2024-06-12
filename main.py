@@ -4,7 +4,7 @@ import mediapipe as mp
 
 # -- general configurations
 write_video = False
-debug = False  # -- activate the camera but do not send information to arduino
+debug = False
 cam_source = "/dev/video2"
 
 if not debug:
