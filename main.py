@@ -5,34 +5,34 @@ import mediapipe as mp
 # -- general configurations
 write_video = False
 debug = False
-cam_source = 0
+cam_source = "/dev/video2"
 
 if not debug:
-    ser = serial.Serial('/dev/ttyUSB0', 9600)
+    ser = serial.Serial('/dev/ttyACM0', 9600)
 
-# -- use angle between wrist and index finger to control x axis
-x_min = 0
-x_mid = 75
-x_max = 150
+# -- use angle between wrist and index finger to control x-axis
+x_min = 90
+x_mid = 130
+x_max = 180
 palm_angle_min = -50
 palm_angle_mid = 20
 
 # -- use wrist y to control y axis
-y_min = 0
-y_mid = 90
+y_min = 92
+y_mid = 118
 y_max = 180
 wrist_y_min = 0.3
 wrist_y_max = 0.9
 
 # -- use palm size to control z axis
-z_min = 10
-z_mid = 90
+z_min = 103
+z_mid = 129
 z_max = 180
-palm_size_min = 0.1
-palm_size_max = 0.3
+palm_size_min = 0.2  # 0.1
+palm_size_max = 0.4  # 0.3
 
-claw_open_angle = 60
-claw_close_angle = 0
+claw_open_angle = 110
+claw_close_angle = 146
 
 servo_angle = [x_mid, y_mid, z_mid, claw_open_angle]
 prev_servo_angle = servo_angle
