@@ -5,34 +5,34 @@ import mediapipe as mp
 # -- general configurations
 write_video = False
 debug = False
-cam_source = "/dev/video2"
+cam_source = 0
 
 if not debug:
-    ser = serial.Serial('/dev/ttyUSB0', 115200)
+    ser = serial.Serial('/dev/ttyUSB0', 9600)
 
 # -- use angle between wrist and index finger to control x axis
 x_min = 0
-x_mid = 90
-x_max = 180
+x_mid = 75
+x_max = 150
 palm_angle_min = -50
 palm_angle_mid = 20
 
 # -- use wrist y to control y axis
-y_min = 45
-y_mid = 100
-y_max = 155
+y_min = 0
+y_mid = 90
+y_max = 180
 wrist_y_min = 0.3
 wrist_y_max = 0.9
 
 # -- use palm size to control z axis
-z_min = 5
-z_mid = 78
-z_max = 150
-plam_size_min = 0.1
-plam_size_max = 0.3
+z_min = 10
+z_mid = 90
+z_max = 180
+palm_size_min = 0.1
+palm_size_max = 0.3
 
-claw_open_angle = 150
-claw_close_angle = 40
+claw_open_angle = 60
+claw_close_angle = 0
 
 servo_angle = [x_mid, y_mid, z_mid, claw_open_angle]
 prev_servo_angle = servo_angle
@@ -50,7 +50,9 @@ if write_video:
     out = cv2.VideoWriter('output.avi', fourcc, 60.0, (640, 480))
 
 clamp = lambda n, minn, maxn: max(min(maxn, n), minn)
-map_range = lambda x, in_min, in_max, out_min, out_max: abs((x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min)
+map_range = lambda x, in_min, in_max, out_min, out_max: abs(
+    (x - in_min) * (out_max - out_min) // (in_max - in_min) + out_min)
+
 
 # -- check if the hand is a fist
 def is_fist(hand_landmarks, palm_size):
@@ -58,17 +60,19 @@ def is_fist(hand_landmarks, palm_size):
     distance_sum = 0
     WRIST = hand_landmarks.landmark[0]
     for i in [7, 8, 11, 12, 15, 16, 19, 20]:
-        distance_sum += ((WRIST.x - hand_landmarks.landmark[i].x)**2 + \
-                         (WRIST.y - hand_landmarks.landmark[i].y)**2 + \
-                         (WRIST.z - hand_landmarks.landmark[i].z)**2)**0.5
+        distance_sum += ((WRIST.x - hand_landmarks.landmark[i].x) ** 2 + \
+                         (WRIST.y - hand_landmarks.landmark[i].y) ** 2 + \
+                         (WRIST.z - hand_landmarks.landmark[i].z) ** 2) ** 0.5
     return distance_sum / palm_size < fist_threshold
+
 
 def landmark_to_servo_angle(hand_landmarks):
     servo_angle = [x_mid, y_mid, z_mid, claw_open_angle]
     WRIST = hand_landmarks.landmark[0]
     INDEX_FINGER_MCP = hand_landmarks.landmark[5]
     # -- calculate the distance between the wrist and the index finger
-    palm_size = ((WRIST.x - INDEX_FINGER_MCP.x)**2 + (WRIST.y - INDEX_FINGER_MCP.y)**2 + (WRIST.z - INDEX_FINGER_MCP.z)**2)**0.5
+    palm_size = ((WRIST.x - INDEX_FINGER_MCP.x) ** 2 + (WRIST.y - INDEX_FINGER_MCP.y) ** 2 + (
+                WRIST.z - INDEX_FINGER_MCP.z) ** 2) ** 0.5
 
     if is_fist(hand_landmarks, palm_size):
         servo_angle[3] = claw_close_angle
@@ -87,13 +91,14 @@ def landmark_to_servo_angle(hand_landmarks):
     servo_angle[1] = map_range(wrist_y, wrist_y_min, wrist_y_max, y_max, y_min)
 
     # -- calculate z angle
-    palm_size = clamp(palm_size, plam_size_min, plam_size_max)
-    servo_angle[2] = map_range(palm_size, plam_size_min, plam_size_max, z_max, z_min)
+    palm_size = clamp(palm_size, palm_size_min, palm_size_max)
+    servo_angle[2] = map_range(palm_size, palm_size_min, palm_size_max, z_max, z_min)
 
     # -- float to int
     servo_angle = [int(i) for i in servo_angle]
 
     return servo_angle
+
 
 with mp_hands.Hands(model_complexity=0, min_detection_confidence=0.5, min_tracking_confidence=0.5) as hands:
     while cap.isOpened():
@@ -128,10 +133,11 @@ with mp_hands.Hands(model_complexity=0, min_detection_confidence=0.5, min_tracki
                     mp_hands.HAND_CONNECTIONS,
                     mp_drawing_styles.get_default_hand_landmarks_style(),
                     mp_drawing_styles.get_default_hand_connections_style())
-                
+
         # -- flip the image horizontally for a selfie-view display.
         image = cv2.flip(image, 1)
-        cv2.putText(image, str(servo_angle), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)  # -- show servo angle
+        cv2.putText(image, str(servo_angle), (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2,
+                    cv2.LINE_AA)  # -- show servo angle
         cv2.imshow('Retorno', image)
 
         if write_video:

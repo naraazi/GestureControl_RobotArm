@@ -4,7 +4,7 @@ Servo servo[4];
 int default_angle[4] = {0, 78, 113, 150}; // -- pay attention on that - mid points
 
 void setup() {
-    Serial.begin(115200); 
+    Serial.begin(9600);
     servo[0].attach(5);
     servo[1].attach(6);
     servo[2].attach(7);
