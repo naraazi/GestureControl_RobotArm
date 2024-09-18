@@ -8,7 +8,7 @@ debug = False
 cam_source = "/dev/video2"
 
 if not debug:
-    ser = serial.Serial('/dev/ttyACM0', 9600)
+    ser = serial.Serial('/dev/ttyUSB0', 9600)
 
 # -- use angle between wrist and index finger to control x-axis
 x_min = 90
@@ -18,9 +18,9 @@ palm_angle_min = -50
 palm_angle_mid = 20
 
 # -- use wrist y to control y axis
-y_min = 92
-y_mid = 118
-y_max = 180
+y_min = 50
+y_mid = 90
+y_max = 145
 wrist_y_min = 0.3
 wrist_y_max = 0.9
 

@@ -1,7 +1,7 @@
 #include <Servo.h>
 
 Servo servo[4];
-int default_angle[4] = {130, 118, 129, 110}; // -- pay attention on that - mid points: {x, y, z, c}
+int default_angle[4] = {130, 90, 129, 110}; // -- pay attention on that - mid points: {x, y, z, c}
 
 void setup() {
     Serial.begin(9600);
