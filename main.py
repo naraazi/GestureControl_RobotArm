@@ -28,8 +28,8 @@ wrist_y_max = 0.9
 z_min = 103
 z_mid = 129
 z_max = 180
-palm_size_min = 0.2  # -- major (live) problem here!
-palm_size_max = 0.4  # -- major (live) problem here!
+palm_size_min = 0.1  # -- major (live) problem here
+palm_size_max = 0.3  # -- major (live) problem here
 
 claw_open_angle = 110
 claw_close_angle = 146
